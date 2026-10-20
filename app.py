@@ -15,11 +15,10 @@ models = load_models()
 st.title("Is the development of leading AI models "
          "concentrating in fewer organisations?")
 st.write(
-    "**Question.** Counted by the number of notable models released each "
-    "year, the field appears to be widening. Counted by the share of training "
-    "compute those models represent, it appears to be narrowing. The two "
-    "measures are drawn from the same records, and the panels below present "
-    "them side by side rather than resolving the tension."
+    "**Question.** Are the most capable AI models coming from a shrinking set "
+    "of organisations, or is the field opening up? The same dataset supports "
+    "both readings, and which one you reach depends on whether you count "
+    "models or the compute behind them."
 )
 st.caption(
     "Audience: a competition policy analyst at the ACCC, deciding whether AI "
@@ -44,71 +43,58 @@ st.divider()
 # from src.panel1_compute import render as panel1
 # from src.panel2_participation import render as panel2
 # from src.panel3_sector import render as panel3
-# from src.panel4_disclosure import render as panel4
-#
+from src.panel4_disclosure import render as panel4
+
 # panel1(models)
 # st.divider()
 # panel2(models)
 # st.divider()
 # panel3(models)
 # st.divider()
-# panel4(models)
+panel4(models)
 
-st.info("Panels are being added. See README.md for who owns what.")
+st.info("Panels 1 to 3 are still being added. See README.md for who owns what.")
 
 st.divider()
 
-st.subheader("Reading the two measures together")
+st.subheader("What the answer depends on")
 st.write(
-    "Neither measure is incorrect, but they answer different questions. A "
-    "regulator assessing barriers to entry is concerned with the compute "
-    "figure, since access to frontier-scale training capacity is what a new "
-    "entrant must secure. A regulator counting how many firms are active in "
-    "the market is better served by the model count. The layout above places "
-    "the two adjacent so that neither is read as the finding on its own."
+    "Counted by the number of notable models released each year, the field is "
+    "opening up. Counted by the share of training compute behind them, it is "
+    "consolidating. Both counts come from the same file, which is what makes "
+    "this question arguable rather than settled."
 )
 
-with st.expander("Limitations of the underlying data"):
+with st.expander("What this app cannot show"):
     st.markdown(
-        "**Sample selection.** Epoch's inclusion criteria are notability "
-        "based: a model enters the dataset by being state of the art, highly "
-        "cited, or historically significant. Concentration measured across "
-        "this sample therefore describes the set of models already judged "
-        "notable, and cannot be read as concentration across all model "
-        "development."
+        "**Selection.** Epoch includes a model when it is state of the art, "
+        "highly cited, or historically significant. Concentration measured on "
+        "a notability-filtered sample is not concentration across the whole "
+        "field."
     )
     st.markdown(
-        "**Organisational boundaries.** Google appears under five separate "
-        "strings in the source file, and Meta, Microsoft and Salesforce under "
-        "several each. These have been consolidated to parent entities on the "
-        "basis that DeepMind has operated within Google since 2014 and merged "
-        "with Google Brain in 2023. The choice is consequential: "
-        "consolidated, Google leads on model count; left as published, OpenAI "
-        "does. An analyst treating subsidiaries as independent competitors "
-        "would reach a less concentrated picture."
+        f"**Organisation identity.** The Google, Meta, Microsoft and "
+        f"Salesforce name variants are folded onto one parent each. That "
+        f"raises measured concentration: unfolded, the data would put OpenAI "
+        f"in front on model count. The opposite rule gives a different answer."
     )
     st.markdown(
-        f"**Attribution of jointly credited models.** {MULTI_CREDIT_MODELS} "
-        f"of {total:,} models list more than one organisation. Training "
-        f"compute cannot be apportioned between collaborators without "
-        f"imposing an arbitrary division, so it is attributed in full to the "
-        f"organisation Epoch lists first. Inspection of the collaboration "
-        f"records shows the industry partner is ordinarily listed ahead of "
-        f"academic partners, which biases the compute measure toward the "
-        f"concentration this app sets out to test."
+        f"**Joint credits.** {MULTI_CREDIT_MODELS} of {total:,} models credit "
+        f"more than one organisation, and in collaborations the industry "
+        f"partner is usually listed first. Compute cannot be divided between "
+        f"partners without inventing a split rule, so compute is assigned to "
+        f"the lead organisation. This overstates how much the leads hold."
     )
     st.markdown(
-        f"**Incomplete disclosure.** Training compute is absent for "
-        f"{total - disclosed:,} of {total:,} models, so compute shares are "
-        f"calculated over the reporting subset rather than the full sample. "
-        f"Where a figure is present it is frequently Epoch's own estimate, "
-        f"derived from hardware counts or from parameter and token "
-        f"arithmetic, rather than a value disclosed by the developer."
+        f"**Missing compute.** {total - disclosed:,} of {total:,} models carry "
+        f"no training compute figure, so every compute share here is computed "
+        f"over the subset that does. Where a figure is present it is often "
+        f"Epoch's own estimate from hardware or parameter counts rather than a "
+        f"number the developer published."
     )
     st.markdown(
-        "**Geographic attribution.** Country records the headquarters of the "
-        "organisation, not the location of the training run or of the "
-        "research staff."
+        "**Geography.** Country is where the organisation is headquartered, "
+        "not where the training ran."
     )
 
 st.caption(SOURCE_LINE)
