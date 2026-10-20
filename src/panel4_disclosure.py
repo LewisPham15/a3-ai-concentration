@@ -15,12 +15,6 @@ from src.data import SOURCE_LINE
 import src.design as dz
 
 
-# A single-hue orange ramp, darkest where the evidence is strongest, so the
-# stack reads as one ordered quantity rather than four unrelated categories.
-# The band for models nobody has a figure for is a translucent neutral: it
-# takes its tone from whatever background sits behind it, and since it is the
-# largest area in recent years a saturated colour there would dominate the
-# panel without carrying any more information.
 BANDS = [
     ("confident", "Figure Epoch records as confident", "#8f2d05"),
     ("likely", "Figure recorded as likely", "#e8590c"),
@@ -118,8 +112,6 @@ def render(models):
         figure.add_trace(go.Scatter(
             x=counts["year"], y=counts[field], name=label,
             mode="lines", stackgroup="disclosure",
-            # A hairline in the page colour separates the bands without
-            # adding a second encoding.
             line=dict(width=1.1, color="rgba(255,255,255,0.8)"),
             fillcolor=colour,
             hovertemplate=template,
