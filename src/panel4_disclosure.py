@@ -5,7 +5,8 @@ how much of the field that measure can still reach. Each year's models are
 split by what is known about their compute: a figure Epoch records as
 confident, one it records as likely or speculative, or no figure at all. The
 bands make the shrinking measurable fraction visible as an area rather than
-leaving the reader to infer it from the space above a line.
+leaving the reader to infer it from the space above a line. A second chart
+then asks which organisations account for the decline.
 """
 import pandas as pd
 import plotly.graph_objects as go
@@ -22,6 +23,12 @@ BANDS = [
     ("none", "No figure at all", "rgba(140,140,132,0.22)"),
 ]
 LABEL_COLOUR = "#8f2d05"
+
+# The ranking below looks only at the period in which disclosure fell, so it
+# describes current practice rather than averaging it with the years before
+# the decline began.
+RANKING_SINCE = 2022
+BELOW, ABOVE = "#8f2d05", "#fb9a4b"
 
 
 def disclosure_by_year(models, first_half_only=False):
@@ -66,6 +73,27 @@ def disclosure_by_year(models, first_half_only=False):
         rows.append(row)
 
     return pd.DataFrame(rows)
+
+
+def disclosure_by_organisation(models, minimum_models, since=RANKING_SINCE):
+    """Share of each organisation's recent models that carry a compute figure.
+
+    Organisations below the model threshold are dropped rather than plotted,
+    because a laboratory with two models can only score 0, 50 or 100 per cent
+    and would rank above or below the rest on nothing but sample size.
+    """
+    recent = models[models["year"] >= since]
+
+    grouped = recent.groupby("organisation").agg(
+        models=("Model", "size"),
+        with_figure=("has_compute", "sum"),
+    )
+    grouped = grouped[grouped["models"] >= minimum_models].copy()
+    grouped["share"] = (100 * grouped["with_figure"] / grouped["models"]).round(1)
+    grouped = grouped.sort_values("share").reset_index()
+
+    overall = round(100 * recent["has_compute"].sum() / len(recent), 1)
+    return grouped, overall, len(recent)
 
 
 def render(models):
@@ -208,5 +236,102 @@ def render(models):
             "possibility, since older models have had years rather than "
             "months."
         )
+
+    st.markdown("###### Which organisations stopped publishing")
+    st.caption(
+        f"Share of each organisation's models since {RANKING_SINCE} that "
+        f"carry a training compute figure, at any confidence grade."
+    )
+
+    threshold = st.slider(
+        "Minimum models published since " + str(RANKING_SINCE),
+        min_value=4, max_value=20, value=10, step=1,
+        key="panel4_min_models",
+        help="Raising the threshold removes laboratories whose share rests "
+             "on a handful of models.",
+    )
+
+    ranked, overall, in_period = disclosure_by_organisation(models, threshold)
+    st.write(f"{len(ranked)} organisations clear the threshold.")
+
+    if ranked.empty:
+        st.info("No organisation published that many models in the period.")
+    else:
+        colours = []
+        for value in ranked["share"]:
+            colours.append(BELOW if value < overall else ABOVE)
+
+        labels = []
+        for i in ranked.index:
+            labels.append(f"{ranked.loc[i, 'share']:.0f}%  "
+                          f"({int(ranked.loc[i, 'with_figure'])}"
+                          f"/{int(ranked.loc[i, 'models'])})")
+
+        bars = go.Figure(go.Bar(
+            x=ranked["share"], y=ranked["organisation"], orientation="h",
+            marker_color=colours, text=labels, textposition="outside",
+            cliponaxis=False,
+            textfont=dict(size=11),
+            customdata=ranked["models"],
+            hovertemplate="%{y}: %{x:.1f}% of %{customdata} models"
+                          "<extra></extra>",
+        ))
+        bars.add_vline(
+            x=overall, line_dash="dash", line_color="#5a5a52", line_width=1.2,
+            annotation_text=f"all organisations, {overall:.0f}%",
+            annotation_position="top", annotation_font_size=11,
+        )
+        bars.update_layout(
+            height=max(320, 26 * len(ranked)),
+            margin=dict(l=10, r=120, t=46, b=10),
+            xaxis=dict(title="Percent of that organisation's models with a "
+                             "compute figure",
+                       range=[0, 118], showgrid=True,
+                       gridcolor="rgba(128,128,128,0.18)"),
+            yaxis=dict(title=None),
+            showlegend=False,
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            font=dict(size=13),
+        )
+        st.plotly_chart(bars, width="stretch")
+
+        lowest = ranked.iloc[0]
+        st.caption(
+            f"Darker bars fall below the {overall:.0f}% average across all "
+            f"{in_period:,} models published since {RANKING_SINCE}. The "
+            f"lowest is {lowest['organisation']} at "
+            f"{lowest['share']:.0f}%, {int(lowest['with_figure'])} of "
+            f"{int(lowest['models'])} models. A laboratory can sit low here "
+            f"either by withholding figures or by publishing models Epoch has "
+            f"not yet estimated; the two cannot be separated from this column "
+            f"alone."
+        )
+
+        # The ranking does not sort by size or by country, so the question is
+        # what it does sort by. Model access turns out to track it closely.
+        recent = models[models["year"] >= RANKING_SINCE].copy()
+        recent["access"] = recent["Open model weights?"].fillna("Not stated")
+        by_access = recent.groupby("access")["has_compute"].agg(["size", "sum"])
+        if "Yes" in by_access.index and "No" in by_access.index:
+            open_share = (100 * by_access.loc["Yes", "sum"]
+                          / by_access.loc["Yes", "size"])
+            closed_share = (100 * by_access.loc["No", "sum"]
+                            / by_access.loc["No", "size"])
+            st.caption(
+                f"The order tracks how a model is released more closely than "
+                f"it tracks size or country. Since {RANKING_SINCE}, models "
+                f"published with open weights carry a compute figure "
+                f"{open_share:.0f}% of the time "
+                f"({int(by_access.loc['Yes', 'sum'])} of "
+                f"{int(by_access.loc['Yes', 'size'])}); models that are not "
+                f"released that way, {closed_share:.0f}% "
+                f"({int(by_access.loc['No', 'sum'])} of "
+                f"{int(by_access.loc['No', 'size'])}). The gap in the chart "
+                f"above is therefore not spread evenly across the field. It "
+                f"sits with the laboratories that sell access to a model "
+                f"rather than publish it, which is the part of the field a "
+                f"competition regulator has least visibility into."
+            )
 
     st.caption(SOURCE_LINE)
