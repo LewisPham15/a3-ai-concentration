@@ -44,7 +44,7 @@ reach it. Do not infer sector from the organisation name.
 | Panel | File | Owner |
 |---|---|---|
 | 1 · Share of compute | `src/panel1_compute.py` | |
-| 2 · Who is in the game, and from where | `src/panel2_participation.py` | |
+| 2 · Who is in the game, and from where | `src/panel2_participation.py` | Tahreema Rahman Zariyat |
 | 3 · Academia versus industry | `src/panel3_sector.py` | |
 | 4 · How much is still observable | `src/panel4_disclosure.py` | Lewis |
 
