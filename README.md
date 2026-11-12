@@ -45,7 +45,7 @@ reach it. Do not infer sector from the organisation name.
 |---|---|---|
 | 1 · Share of compute | `src/panel1_compute.py` | Tahreema Rahman Zariyat |
 | 2 · Who is in the game, and from where | `src/panel2_participation.py` |  |
-| 3 · Academia versus industry | `src/panel3_sector.py` | |
+| 3 · Academia versus industry | `src/panel3_sector.py` | Eva Shrestha |
 | 4 · How much is still observable | `src/panel4_disclosure.py` | Ngoc Gia Phong Pham |
 
 Each panel is one function, `render(models)`:
