@@ -6,8 +6,20 @@ organisations, or is the field opening up?
 **Persona.** A competition policy analyst at the ACCC, deciding whether AI
 model development warrants closer competition monitoring.
 
-**User stories.** To be finalised once the panels exist, since each story has
-to be walkable in the app.
+**User stories.**
+
+- As a competition analyst, I want to see how much of each year's training
+  compute sits with a handful of laboratories, so that I can judge whether
+  frontier capability is consolidating. *(Panel 1: move the "handful" slider
+  to change how many organisations count as the handful.)*
+- As a competition analyst, I want to count how many distinct organisations
+  and countries publish a notable model each year, so that I can tell a
+  widening field from a narrowing one. *(Panel 2: move the year slider to
+  change the window.)*
+- As a competition analyst, I want to know how much of the field still
+  reports its training compute, so that I can tell how far the concentration
+  figures can be trusted. *(Panel 4: switch between share and count, and
+  raise the minimum-models threshold on the organisation ranking.)*
 
 ## Data
 
