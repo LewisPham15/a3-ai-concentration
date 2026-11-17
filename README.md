@@ -56,7 +56,7 @@ reach it. Do not infer sector from the organisation name.
 | Panel | File | Owner |
 |---|---|---|
 | 1 · Share of compute | `src/panel1_compute.py` | Tahreema Rahman Zariyat |
-| 2 · Who is in the game, and from where | `src/panel2_participation.py` |  |
+| 2 · Who is in the game, and from where | `src/panel2_participation.py` | Mohit Sehrawat |
 | 3 · Academia versus industry | `src/panel3_sector.py` | Eva Shrestha |
 | 4 · How much is still observable | `src/panel4_disclosure.py` | Ngoc Gia Phong Pham |
 
@@ -93,6 +93,13 @@ When your panel runs, uncomment its two lines in `app.py`.
 ```
 pip install -r requirements.txt
 streamlit run app.py
+```
+
+The app reads `data/processed/models_clean.csv`. To rebuild it from the
+source CSV (for example after changing a rule in `src/data.py`), run:
+
+```
+python -m src.build_processed
 ```
 
 Python 3.11.
