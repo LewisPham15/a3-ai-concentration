@@ -103,3 +103,13 @@ python -m src.build_processed
 ```
 
 Python 3.11.
+
+
+## Data and AI disclosure statement
+
+**Data:** The app uses Epoch AI's *Notable AI Models* dataset
+(https://epoch.ai/data/ai-models), licensed CC BY 4.0. We downloaded one
+snapshot on 18 October 2026 and kept it unchanged in `data/`. How it was
+processed is described in `data/DATA_DICTIONARY.md`.
+
+**AI use:** AI tools were used to help understand the assignment steps and review, debug and improve the code. Each use is listed in `AI_PROVENANCE.md`.
