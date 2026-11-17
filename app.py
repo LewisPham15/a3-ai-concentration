@@ -41,19 +41,18 @@ st.divider()
 
 # --- panels, uncommented as each owner pushes their module ------------------
 from src.panel1_compute import render as panel1
-# from src.panel2_participation import render as panel2
+from src.panel2_participation import render as panel2
 from src.panel3_sector import render as panel3
 from src.panel4_disclosure import render as panel4
 
 panel1(models)
 st.divider()
-# panel2(models)
-# st.divider()
+panel2(models)
+st.divider()
 panel3(models)
 st.divider()
 panel4(models)
 
-st.info("Panels 2 is still being added. See README.md for who owns what.")
 
 st.divider()
 
