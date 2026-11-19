@@ -14,7 +14,9 @@ from src.data import PROCESSED, SNAPSHOT, clean_models
 
 
 def main():
-    source = pd.read_csv(SNAPSHOT, low_memory=False)
+    # round_trip reads every number exactly as written in the source,
+    # so the processed file is identical on every computer
+    source = pd.read_csv(SNAPSHOT, low_memory=False, float_precision="round_trip")
     models = clean_models(source)
     PROCESSED.parent.mkdir(parents=True, exist_ok=True)
     models.to_csv(PROCESSED, index=False)
