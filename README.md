@@ -46,10 +46,6 @@ measuring compute use `organisation`, the lead credit, because compute cannot
 be split between partners without inventing a split rule. Panels measuring
 participation call `exploded_organisations()` and count every partner.
 
-**Sector.** Read the `sector` column, which comes from Epoch's own
-`Organization categorization`. It carries a distinct
-`Industry - Academia Collaboration` value, so the first-listed bias does not
-reach it. Do not infer sector from the organisation name.
 
 ## Panels
 
