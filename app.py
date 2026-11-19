@@ -68,6 +68,16 @@ st.write(
     "rather than settled."
 )
 
+st.markdown(
+    "**Our answer:** Yes, AI development is concentrated, and the data does "
+    "not show it opening up. A regulator cares most about training compute, "
+    "because that is what a new competitor would need to build a leading "
+    "model. A few large labs hold most of it: the concentration index is "
+    "above the ACCC's 'highly concentrated' level in 9 of the 10 years. More "
+    "organisations did join the field up to 2023 (121 that year), but that "
+    "number has fallen every year since."
+)
+
 with st.expander("What this app cannot show"):
     st.markdown(
         "**Selection.** Epoch includes a model when it is state of the art, "
