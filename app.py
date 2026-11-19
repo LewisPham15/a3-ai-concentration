@@ -17,8 +17,8 @@ st.title("Is the development of leading AI models "
 st.write(
     "**Question.** Are the most capable AI models coming from a shrinking set "
     "of organisations, or is the field opening up? The same dataset supports "
-    "both readings, and which one you reach depends on whether you count "
-    "models or the compute behind them."
+    "both readings, depending on which years carry the most weight and "
+    "whether you count organisations or the compute behind their models."
 )
 st.caption(
     "Audience: a competition policy analyst at the ACCC, deciding whether AI "
@@ -41,28 +41,41 @@ st.divider()
 
 # --- panels, uncommented as each owner pushes their module ------------------
 from src.panel1_compute import render as panel1
-# from src.panel2_participation import render as panel2
-# from src.panel3_sector import render as panel3
+from src.panel2_participation import render as panel2
+from src.panel3_sector import render as panel3
 from src.panel4_disclosure import render as panel4
 
 panel1(models)
 st.divider()
-# panel2(models)
-# st.divider()
-# panel3(models)
-# st.divider()
+panel2(models)
+st.divider()
+panel3(models)
+st.divider()
 panel4(models)
 
-st.info("Panels 2 to 3 are still being added. See README.md for who owns what.")
 
 st.divider()
 
 st.subheader("What the answer depends on")
 st.write(
-    "Counted by the number of notable models released each year, the field is "
-    "opening up. Counted by the share of training compute behind them, it is "
-    "consolidating. Both counts come from the same file, which is what makes "
-    "this question arguable rather than settled."
+    "Participation widened and then turned. The number of organisations "
+    "credited on a notable model rose through 2023, when 121 published one, "
+    "and has fallen in every year since. Training compute, meanwhile, stayed "
+    "concentrated in a handful of laboratories throughout. So whether the "
+    "field is closing depends on how the post-2023 contraction is read: as a "
+    "turning point, or as a pause in a field that is still widening. The "
+    "same file supports both, which is what makes the question arguable "
+    "rather than settled."
+)
+
+st.markdown(
+    "**Our answer:** Yes, AI development is concentrated, and the data does "
+    "not show it opening up. A regulator cares most about training compute, "
+    "because that is what a new competitor would need to build a leading "
+    "model. A few large labs hold most of it: the concentration index is "
+    "above the ACCC's 'highly concentrated' level in 9 of the 10 years. More "
+    "organisations did join the field up to 2023 (121 that year), but that "
+    "number has fallen every year since."
 )
 
 with st.expander("What this app cannot show"):

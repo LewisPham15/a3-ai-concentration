@@ -4,6 +4,14 @@ All four panels import from here so that they count the same way. Do not read
 the CSV directly in a panel file: the start-year filter and the organisation
 rules live here, and a panel that bypasses them will contradict the others on
 screen.
+
+Data flow:
+    data/notable_ai_models_2026-10-18.csv   (source, never edited)
+      -> clean_models()                     (the transform, below)
+      -> data/processed/models_clean.csv    (processed file, the app reads this)
+
+Rebuild the processed file after changing the source or the rules:
+    python -m src.build_processed
 """
 from pathlib import Path
 
@@ -12,6 +20,7 @@ import streamlit as st
 
 DATA = Path(__file__).resolve().parents[1] / "data"
 SNAPSHOT = DATA / "notable_ai_models_2026-10-18.csv"
+PROCESSED = DATA / "processed" / "models_clean.csv"
 
 SNAPSHOT_DATE = "18 October 2026"
 SOURCE_LINE = ("Source: Notable AI Models, Epoch AI, CC BY 4.0. "
@@ -51,10 +60,9 @@ def canonical(name):
     return name
 
 
-@st.cache_data
-def load_models():
-    """One row per model, with the shared derived columns added."""
-    frame = pd.read_csv(SNAPSHOT, low_memory=False)
+def clean_models(frame):
+    """The documented transform: source rows in, one cleaned row per model out."""
+    frame = frame.copy()
     frame["publication_date"] = pd.to_datetime(frame["Publication date"],
                                                errors="coerce")
     frame["year"] = frame["publication_date"].dt.year
@@ -77,6 +85,24 @@ def load_models():
     frame["confidence"] = frame["Confidence"].fillna("Not stated")
 
     frame = frame.sort_values(["year", "organisation"]).reset_index(drop=True)
+    validate(frame)
+    return frame
+
+
+@st.cache_data
+def load_models():
+    """Read the processed file the app runs on.
+
+    The file is made from the source by src/build_processed.py. Reading it
+    back restores the date and integer types the panels expect.
+    """
+    if not PROCESSED.exists():
+        raise FileNotFoundError(
+            f"{PROCESSED} is missing. Run: python -m src.build_processed")
+    # round_trip reads every decimal back exactly as it was written
+    frame = pd.read_csv(PROCESSED, low_memory=False, float_precision="round_trip")
+    frame["publication_date"] = pd.to_datetime(frame["publication_date"])
+    frame["year"] = frame["year"].astype("int32")
     validate(frame)
     return frame
 

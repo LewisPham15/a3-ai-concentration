@@ -6,8 +6,20 @@ organisations, or is the field opening up?
 **Persona.** A competition policy analyst at the ACCC, deciding whether AI
 model development warrants closer competition monitoring.
 
-**User stories.** To be finalised once the panels exist, since each story has
-to be walkable in the app.
+**User stories.**
+
+- As a competition analyst, I want to see how much of each year's training
+  compute sits with a handful of laboratories, so that I can judge whether
+  frontier capability is consolidating. *(Panel 1: move the "handful" slider
+  to change how many organisations count as the handful.)*
+- As a competition analyst, I want to count how many distinct organisations
+  and countries publish a notable model each year, so that I can tell a
+  widening field from a narrowing one. *(Panel 2: move the year slider to
+  change the window.)*
+- As a competition analyst, I want to know how much of the field still
+  reports its training compute, so that I can tell how far the concentration
+  figures can be trusted. *(Panel 4: switch between share and count, and
+  raise the minimum-models threshold on the organisation ranking.)*
 
 ## Data
 
@@ -34,19 +46,15 @@ measuring compute use `organisation`, the lead credit, because compute cannot
 be split between partners without inventing a split rule. Panels measuring
 participation call `exploded_organisations()` and count every partner.
 
-**Sector.** Read the `sector` column, which comes from Epoch's own
-`Organization categorization`. It carries a distinct
-`Industry - Academia Collaboration` value, so the first-listed bias does not
-reach it. Do not infer sector from the organisation name.
 
 ## Panels
 
 | Panel | File | Owner |
 |---|---|---|
-| 1 · Share of compute | `src/panel1_compute.py` | |
-| 2 · Who is in the game, and from where | `src/panel2_participation.py` | Tahreema Rahman Zariyat |
-| 3 · Academia versus industry | `src/panel3_sector.py` | |
-| 4 · How much is still observable | `src/panel4_disclosure.py` | Lewis |
+| 1 · Share of compute | `src/panel1_compute.py` | Tahreema Rahman Zariyat |
+| 2 · Who is in the game, and from where | `src/panel2_participation.py` | Mohit Sehrawat |
+| 3 · Academia versus industry | `src/panel3_sector.py` | Eva Shrestha |
+| 4 · How much is still observable | `src/panel4_disclosure.py` | Ngoc Gia Phong Pham |
 
 Each panel is one function, `render(models)`:
 
@@ -83,4 +91,21 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
+The app reads `data/processed/models_clean.csv`. To rebuild it from the
+source CSV (for example after changing a rule in `src/data.py`), run:
+
+```
+python -m src.build_processed
+```
+
 Python 3.11.
+
+
+## Data and AI disclosure statement
+
+**Data:** The app uses Epoch AI's *Notable AI Models* dataset
+(https://epoch.ai/data/ai-models), licensed CC BY 4.0. We downloaded one
+snapshot on 18 October 2026 and kept it unchanged in `data/`. How it was
+processed is described in `data/DATA_DICTIONARY.md`.
+
+**AI use:** AI tools were used to help understand the assignment steps and review, debug and improve the code. Each use is listed in `AI_PROVENANCE.md`.
