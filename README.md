@@ -10,7 +10,7 @@ model development warrants closer competition monitoring.
 
 - As a competition analyst, I want to see how much of each year's training
   compute sits with a handful of laboratories, so that I can judge whether
-  frontier capability is consolidating. *(Panel 1: move the "handful" slider
+  frontier capability is consolidating. *(Panel 1: move the "Organisations to name" slider
   to change how many organisations count as the handful.)*
 - As a competition analyst, I want to count how many distinct organisations
   and countries publish a notable model each year, so that I can tell a
